@@ -4,13 +4,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import BlockLinkFieldActions from 'components/BlockLinkFieldActions/BlockLinkFieldActions';
 import CONSTANTS from 'constants/index';
-import { provideInjector } from 'lib/Injector';
+import { provideInjector, loadComponent } from 'lib/Injector';
+import { createInsertLinkModal } from 'containers/InsertLinkModal/InsertLinkModal';
 
 const dialogWrapperClass = 'insert-link__dialog-wrapper';
 const internalDialogId = 'insert-link__dialog-wrapper--internal';
 const noTinyMceClass = `${internalDialogId}-no-tinymce`;
 const InjectedBlockLinkFieldActions = provideInjector(BlockLinkFieldActions);
 
+const sectionConfigKey = 'SilverStripe\\CMS\\Controllers\\CMSPageEditController';
+
+const InjectedLinkModal = loadComponent(createInsertLinkModal(sectionConfigKey, 'editorInternalLink'));
 /**
  * The BlockLinkField allows you to add arbitrary links to a content block. They will be
  * condensed into a BlockLinkField form field, which triggers an "insert link" modal popup.
@@ -56,14 +60,23 @@ jQuery.entwine('ss', ($) => {
     onclick(e) {
       // Don't interfere with buttons default behaviour inside the container
       if (!$(e.target).is('button')) {
-        const linkName = this.attr('name');
-
-        this.getDialogWrapper()
-          .addClass(noTinyMceClass)
-          .data('datafield-name', linkName)
-          .renderModal(true);
-
-        $(`#${internalDialogId}`).updateModalTitle($(this).find(`#${linkName}_Title`).val());
+        ReactDOM.render(
+          <InjectedLinkModal
+            isOpen={true}
+            onInsert={(data) => alert(`You linked to page ID ${data.PageID}`)}
+            onClosed={() => ReactDOM.unmountComponentAtNode(this[0])}
+            identifier="Admin.InsertLinkInternalModal"
+          />,
+          this[0]
+        );
+        // const linkName = this.attr('name');
+        //
+        // this.getDialogWrapper()
+        //   .addClass(noTinyMceClass)
+        //   .data('datafield-name', linkName)
+        //   .renderModal(true);
+        //
+        // $(`#${internalDialogId}`).updateModalTitle($(this).find(`#${linkName}_Title`).val());
       }
     },
 
