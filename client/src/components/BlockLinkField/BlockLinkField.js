@@ -192,7 +192,7 @@ class BlockLinkField extends Component {
     const {
       // Omit keys we don't need
       SecurityID, // eslint-disable-line no-unused-vars
-      action_insert, // eslint-disable-line no-unused-vars
+      action_insert, // eslint-disable-line no-unused-vars,camelcase
       ...formData
     } = data;
 

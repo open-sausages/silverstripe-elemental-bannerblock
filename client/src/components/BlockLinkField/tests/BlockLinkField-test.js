@@ -4,7 +4,7 @@
 import React from 'react';
 import { Component as BlockLinkField } from '../BlockLinkField';
 import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15.4/build/index';
+import Adapter from 'enzyme-adapter-react-16/build/index';
 import Injector from 'lib/Injector';
 
 Injector.load();
@@ -52,7 +52,7 @@ describe('BlockLinkField', () => {
       expect(wrapper.find('.block-link-field__actions')).toHaveLength(1);
     });
 
-    it('should throw and error if no BlockLinkActionsComponent is given', () => {
+    it('if no BlockLinkActionsComponent is given, no action is rendered', () => {
       // eslint-disable-next-line no-unused-vars
       const { BlockLinkFieldActionsComponent, ...otherProps } = props;
       const wrapper = shallow(
@@ -61,7 +61,6 @@ describe('BlockLinkField', () => {
         />
       );
 
-      expect(wrapper.instance().render()).toThrow();
       expect(wrapper.find('.block-link-field__icon')).toHaveLength(1);
       expect(wrapper.find('.block-link-field__content')).toHaveLength(1);
       expect(wrapper.find('.block-link-field__actions')).toHaveLength(0);
